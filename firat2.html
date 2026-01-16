@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>SoundCloud Şarkılarım</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* EKRANI İKİYE BÖLEN KAPSAYICI */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* SOL TARAF (SİYAH) */
+.left {
+    width: 50%;
+    background: #111;
+    color: #fff;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* SAĞ TARAF (KIRMIZI) */
+.right {
+    width: 50%;
+    background: #c00000;
+}
+
+/* İÇERİK STİLLERİ */
+h1 {
+    color: #ff5500;
+}
+
+.track {
+    border-bottom: 1px solid #333;
+    padding: 15px 0;
+}
+
+.track a {
+    color: #ff5500;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.track a:hover {
+    text-decoration: underline;
+}
+
+.date {
+    font-size: 12px;
+    color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SOL SİYAH ALAN -->
+    <div class="left">
+        <h1>🎵 SoundCloud Şarkılarım</h1>
+        <div id="tracks">Yükleniyor...</div>
+    </div>
+
+    <!-- SAĞ KIRMIZI ALAN -->
+    <div class="right"></div>
+
+</div>
+
+<script>
+const rssUrl = "https://soundcloud.com/user-948415912-117164418/locked-in/rss";
+const proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rssUrl);
+
+fetch(proxy)
+.then(res => res.text())
+.then(str => new DOMParser().parseFromString(str, "text/xml"))
+.then(data => {
+    const items = data.querySelectorAll("item");
+    const container = document.getElementById("tracks");
+    container.innerHTML = "";
+
+    if (items.length === 0) {
+        container.innerText = "RSS bulunamadı.";
+        return;
+    }
+
+    items.forEach(item => {
+        const title = item.querySelector("title")?.textContent || "Başlık yok";
+        const link = item.querySelector("link")?.textContent || "#";
+        const dateNode = item.querySelector("pubDate");
+
+        const date = dateNode
+            ? new Date(dateNode.textContent).toLocaleDateString("tr-TR")
+            : "";
+
+        const div = document.createElement("div");
+        div.className = "track";
+        div.innerHTML = `
+            <a href="${link}" target="_blank">${title}</a>
+            <div class="date">${date}</div>
+        `;
+        container.appendChild(div);
+    });
+})
+.catch(err => {
+    document.getElementById("tracks").innerText =
+        "Şarkılar yüklenemedi.";
+    console.error(err);
+});
+</script>
+
+</body>
+</html>
