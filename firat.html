@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+<meta charset="UTF-8">
+ <title>Firat Nergiz</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+}
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+.left, .right {
+    width: 50%;
+    height: 100%;
+}
+.left {
+    background-color:yellow;
+}
+.right {
+    background-color: navy;
+}
+button {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+padding: 10px 20px;
+font-size: 18px;
+cursor:pointer;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+     <div class="left"   id="left"></div>
+    <div class="right"   id="right"></div>
+</div>
+<button onclick="BAW()">BAW</button>
+<script>
+    function BAW() {
+        const left = document.getElementById("left");
+        const right= document.getElementById("right");
+        const leftColor = window.getComputedStyle(left).backgroundColor;
+        const rightColor = window.getComputedStyle(right).backgroundColor;
+        left.style.backgroundColor = rightColor;
+        right.style.backgroundColor = leftColor;
+    }
+    </script>
+    </body>
+</html>
